@@ -60,18 +60,26 @@
     <form>
         <div class="form-group">
 
-        <!-- Kiyoshi -->
+        <!-- Kiyoshi // -->
         <div class="row">
             <label for="connectorsInput">All Connectors</label>
-            <select class="form-select my-selector" multiple size="7">
+            <select　id="connectorsSelect" class="form-select my-selector" multiple size="7">
                 <option selected>-- Connectors --</option>
-                <datalist id="connectorsDd">
+                <datalist id="connectorsDd2">
                     {{#each data.connectorsInfo}}
-                    <option value="{{@key}}">{{this.title}}</option>
+                    <option  value="{{@key}}">{{this.title}}</option>
                     {{/each}}
                 </datalist>
             </select>
         </div>
+
+        <div class="row">
+            <label for="actionsDd">Actions of Selected Connectors</label>
+            <select class="form-select my-selector" multiple size="7">
+                <option></option>
+            </select>
+        </div>
+        <!-- // Kiyoshi -->
 
 
           <!-- original -->
@@ -315,6 +323,16 @@
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
         });
 
+        // on click connectors
+        var selectedConn2Actions = [];
+        $('#connectorsSelect').click(function(event){
+            var selectedConnectors = [];
+            selectedConnectors = $(this).val();
+
+            console.log("selected connectors : " + selectedConnectors);
+        })
+
+
         /**
          * For Overview Page
          * */
@@ -393,6 +411,7 @@
                     alert(error.message);
             });           
         });
+
 
         /**
          * For Error Page

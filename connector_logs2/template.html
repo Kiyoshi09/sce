@@ -1,0 +1,397 @@
+<script type="text/x-handlebars">
+    <style type="text/css">
+        footer {
+            margin-top: 20px;
+        }
+        caption{
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: medium;
+        }
+        table tbody, table thead{
+            display: block;
+        }
+        th, td {
+            width: 160px;
+        }
+        table tbody {
+            overflow: auto;
+            height: 200px;
+        }
+        tr {
+            cursor: pointer;
+        }
+        .badge-error {
+            background-color: #b94a48;
+        }
+        .text-error {
+            font-size: 12px;
+        }
+        .pre-scrollable{
+            max-height: 200px;
+            overflow-y: scroll;
+        }
+        .list-group-item-text{
+            margin-bottom: 10px;
+        }
+        .errorDetailHeader{
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <header>
+    {{#if ui.error}}
+    <div class="alert alert-danger" role="alert">
+        <p>{{data.error}}</p>
+    </div>
+    {{/if}}
+
+    {{#if ui.search}}
+    <form>
+        <div class="form-group">
+          <label for="connectorsInput">Connector</label>
+          <input required list="connectorsDd" class="form-control" id="connectorsInput" placeholder="enter name/id/status...">
+          <datalist id="connectorsDd">
+            {{#each data.connectorsInfo}}
+            <option value="{{@key}}">{{this.title}}</option>
+            {{/each}}
+          </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="actionsDd">Action</label>
+            <select class="form-control" id="actionsDd">
+                <option hidden disabled selected value> -- select an option -- </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+                <label for="fromDate">From</label>
+                <input class="form-control" type="datetime-local" id="fromDate" required>
+        </div>
+
+        <div class="form-group">
+                <label for="toDate">To</label>
+                <input class="form-control" type="datetime-local" id="toDate" required>
+        </div>
+
+        <div class="form-group">
+                <label>Options</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="errorOnly">
+                    </span>
+                    <label class="form-control" for="errorOnly">Show logs with error only</label>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="utcTime">
+                    </span>
+                    <label class="form-control" for="utcTime">UTC time (default is local time)</label>
+                </div>
+        </div>
+
+      </form>
+      <div class="btn-group">
+            <button type="submit" id="udhclSubmit" class="btn btn-primary">Submit</button>
+      </div>
+      {{/if}}
+
+      {{#if ui.overview}}
+      <div>
+        <table class="table table-striped table-hover" id="udhclTable">
+                <caption>Success / Error: {{data.success}} / {{data.error}}</caption>
+                <thead>
+                    <tr>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Success</th>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data.logsOverview}}
+                    <tr data-hidden="{{this.hidden}}">
+                    <td>{{this.start}}</td>
+                    <td>{{this.end}}</td>
+                    <td>{{this.success}}</td>
+                    <td>{{this.error}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+        </table>
+      </div>
+      <div>
+            <button type="submit" id="udhclExport" class="btn btn-primary">Export</button>
+            <button type="submit" id="udhclExportErrors" class="btn btn-primary">Export all errors</button>
+            <button type="submit" id="udhclBack" class="btn btn-primary">Back</button>
+      </div>
+      {{/if}}
+
+      {{#if ui.detail}}
+      <div class="errorDetailHeader">
+            <span>Displaying {{data.count}} of up to</span>
+            <select id="udhclErrorLimit">
+                {{#each data.errorLimitOptions}}
+                <option value={{this}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <span>errors</span>
+      </div>
+      <div class="list-group">
+          {{#each data.errors}}
+          <a class="list-group-item">
+              <div class="list-group-item-heading">
+                  <span class="badge badge-error">{{this.time}}</span>
+                  <span class="badge badge-error">{{this.error_code}}</span>
+                  {{#if this.actionTime}}
+                  <span class="badge badge-error">{{this.actionTime}}</span>
+                  {{/if}}
+              </div>
+              <div class="list-group-item-text">
+                  <span class="badge badge-error">{{this.visitor_id}}</span>
+              </div>
+              <div class="list-group-item-text">
+                    <strong>{{this.title}}</strong>
+              </div>
+              <div class="well well-sm list-group-item-text pre-scrollable">
+                  <ul>
+                  {{#each this.message}}
+                    <li class="text-error">{{this}}</li>
+                  {{/each}}
+                  <ul>
+                  </div>
+          </a>
+          {{/each}}
+      </div>
+      <div>
+        <button type="submit" id="udhclDetail" class="btn btn-primary">Detail</button>
+        <button type="submit" id="udhclBack" class="btn btn-primary">Back</button>
+      </div>
+      {{/if}}
+
+      </header>
+
+      <footer>
+        <p>
+            Comments / bugs / feature requests? Send them to <a href = "mailto:gerard.nguyen@tealium.com">gerard.nguyen@tealium.com</a>
+        </p>
+      </footer>
+      
+    <script type="text/javascript">
+        function getYYYYMMDD(d = new Date()) {
+            var yyyy = d.getFullYear().toString();
+            var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based    
+            var dd  = d.getDate().toString();
+            return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+        }
+
+        function downloadObjectAsJson(exportObj, exportName) {
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+            var downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", exportName + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+        
+        /**
+         * For Search Page
+         * */
+        var connectorsInfo = [];
+
+        {{#if data.hasConnector }}
+        connectorsInfo = JSON.parse(atob('{{{ data.connectorsInfoString }}}'));
+        {{/if}}
+
+        // set default datetime value
+        var todayDate = getYYYYMMDD();
+        var fromDate = document.getElementById('fromDate');
+        var toDate = document.getElementById('toDate');
+
+        // todo: what is the min date value?
+        if (fromDate){
+            fromDate.value = `${todayDate}T00:00`;
+            fromDate.setAttribute('max', `${todayDate}T23:59`);
+        } 
+        if (toDate){
+            toDate.value = `${todayDate}T23:59`;
+            toDate.setAttribute('max', `${todayDate}T23:59`);
+        }
+
+        // on connector selected, update actions dropdown
+        $('#connectorsInput').on('input', function(event){
+            var connectorId = event.target.value;
+            $('#actionsDd').empty();
+            $.each(connectorsInfo[connectorId].actions, function (i, item) {
+                $('#actionsDd').append($('<option>', { 
+                    value: item.id,
+                    text : item.title 
+                }));
+            });
+        });
+
+        // set previous selection if any
+        if (window.sessionStorage){
+            var connectorId = sessionStorage.getItem('connectorId');
+            var actionId = sessionStorage.getItem('actionId');
+            var from = sessionStorage.getItem('from');
+            var to = sessionStorage.getItem('to');
+
+            if (connectorId){
+                $('#connectorsInput').val(connectorId);
+                $('#connectorsInput').trigger('input');
+            }
+            if (actionId){
+                $('#actionsDd').val(actionId);
+            }
+            if (from && fromDate){
+                fromDate.value = from;
+            }
+
+            if (to && toDate){
+                toDate.value = to;
+            }
+        }
+        
+        // on search form submit, get logs overview
+        $('#udhclSubmit').click(function(event){
+            event.preventDefault();
+            var params = {};
+            params.connectorId = $('#connectorsInput').val();
+            params.actionId = $('#actionsDd').val();
+            params.from = $('#fromDate').val();
+            params.to = $('#toDate').val();
+
+            if (!params.connectorId || !params.actionId){
+                alert('Fill in required fields');
+                return;
+            }
+
+            // remember user selections
+            if (window.sessionStorage){
+                sessionStorage.setItem('connectorId', params.connectorId);
+                sessionStorage.setItem('actionId', params.actionId);
+                sessionStorage.setItem('from', params.from);
+                sessionStorage.setItem('to', params.to);
+            }
+            params.errorOnly = $('#errorOnly').is(":checked");
+            params.utcTime = $('#utcTime').is(":checked");
+            tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
+        });
+
+        /**
+         * For Overview Page
+         * */
+        // on table row select, get log detail
+        $('#udhclTable tr').click(function(){
+            var tokens = $(this).data('hidden');
+            var params = {};
+
+            tokens = tokens.split('|');
+            params.connectorId = tokens[0];
+            params.actionId = tokens[1];
+            params.start = tokens[2];
+            params.end = tokens[3];
+            params.error_count = tokens[4];
+
+            // do nothing with 0 error
+            if(params.error_count == 0){
+                return;
+            }
+
+            tealiumTools.invokeFunction('{{event.onRowSelect}}', params);
+        });
+
+        // on export button click, export table data to csv
+        $('#udhclExport').click(function(){
+            var csvContent = 'data:text/csv;charset=utf-8,';
+            var rows = [];
+
+            {{#if data.logsOverviewString}}
+            rows = JSON.parse('{{{ data.logsOverviewString }}}');
+            {{/if}}
+
+            // header
+            csvContent += 'Start Time, End Time, Success, Error \r\n';
+
+            // body
+            csvContent += rows.map(row => {
+                return [row.start, row.end, row.success, row.error].join(',');
+            }).join('\r\n');
+        
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "{{data.filename}}");
+            document.body.appendChild(link); // Required for FF
+            link.click();
+            document.body.removeChild(link); 
+        });
+
+        // on export all errors click, export all errors
+        $('#udhclExportErrors').click(function(){
+            var limit = window.prompt('Enter maximum errors per log', 10);
+            limit = isNaN(limit) ? 10 : parseInt(limit);
+            limit = limit > 50 ? 50 : limit; // hard code upper limit
+
+            var rows = [];
+            {{#if data.logsOverviewString}}
+            rows = JSON.parse('{{{ data.logsOverviewString }}}');
+            {{/if}}
+            
+            var urls = rows.filter(row => row.error > 0).map(row => row.endpoint.replace(/limit=\d+/gi, `limit=${limit}`));
+
+            Promise.all(urls
+                .map(async url => {
+                    var data = [];
+                    var response = await fetch(url);
+                    if (response.ok) data = await response.json();
+                    return data;
+                })).then(values => {
+                    var exportObj = [].concat.apply([], values);
+                    downloadObjectAsJson(exportObj, 'connectorErrorLogs');
+                    alert('Errors logs are downloaded!');
+
+                })
+                .catch(error => {
+                    alert(error.message);
+            });           
+        });
+
+        /**
+         * For Error Page
+         * */
+        // set default error limit display
+        var errorLimit = 10;
+        {{#if data.errorLimit}}
+            errorLimit = parseInt({{data.errorLimit}});
+        {{/if}}
+        $('#udhclErrorLimit').val(errorLimit);
+
+        // on dropdown maxium error select, reload page with new error display limit
+        $('#udhclErrorLimit').on('change', function(event){
+            var errorLimit = event.target.selectedOptions[0].value;
+            var params = {};
+            
+            {{#if data.existingParamsString}}
+                params = JSON.parse('{{{ data.existingParamsString }}}');
+            {{/if}}
+
+            params.limit = errorLimit;
+            tealiumTools.invokeFunction('{{event.onErrorLimitChange}}', params);
+        });
+
+        // on error list item click, open new tab of error data
+        $('#udhclDetail').click(function(){
+            window.open('{{data.url}}', '_blank');
+        });
+
+        // on back, go to search page
+        $('#udhclBack').click(function(){
+            tealiumTools.invokeFunction('{{event.onBack}}');
+        });
+    </script>
+
+</script>

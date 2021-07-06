@@ -317,6 +317,14 @@
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
         });
 
+        // Kiyoshi : on click connectors list
+        var selectedConnectors2Actions = [];
+        $('#connectorsSelect').click(function(event){
+            var selectedConnector = $(this).val();
+
+            console.log("selected connector : " + selectedConnector);
+        })
+
         /**
          * For Overview Page
          * */

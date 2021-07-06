@@ -50,17 +50,28 @@
     <form>
         <div class="form-group">
 
-          <label for="connectorsInput">All Connectors</label>
-          <select class="form-select" size="7" aria-label="size 7 select example">
-            <option selected>Open this select menu</option>
-            <datalist id="connectorsDd">
-                {{#each data.connectorsInfo}}
-                <option value="{{@key}}">{{this.title}}</option>
-                {{/each}}
-            </datalist>
-          </select>
+          <!-- Kiyoshi -->
+          <div class="d-flex flex-row bd-highlight mb-3">
+            <div class="p-2 bd-highlight">
+                <label for="connectorsInput">All Connectors</label>
+                <select class="form-select" size="7" aria-label="size 7 select example">
+                    <option selected>-- Connectors --</option>
+                    <datalist id="connectorsDd">
+                        {{#each data.connectorsInfo}}
+                        <option value="{{@key}}">{{this.title}}</option>
+                        {{/each}}
+                    </datalist>
+                </select>
+            </div>
 
-        <!--
+            <div class="p-2 bd-highlight">
+                <label for="connectorsInput">Added Connector</label>
+                <select class="form-select" size="7" aria-label="size 7 select example">
+                </select>
+            </div>
+        </div>
+
+          <!-- original -->
           <label for="connectorsInput">Connector</label>
           <input required list="connectorsDd" class="form-control" id="connectorsInput" placeholder="enter name/id/status...">
           <datalist id="connectorsDd">
@@ -68,7 +79,6 @@
             <option value="{{@key}}">{{this.title}}</option>
             {{/each}}
           </datalist>
-        -->
         </div>
 
         <div class="form-group">

@@ -3,7 +3,7 @@
     "title": "Kindred Connector Logs",
     "icon_url": "https://my.tealiumiq.com/img/login/tealium_login_logo.png",
     "scripts": {
-        "connector_logs": {
+        "connector_logs2": {
             "title": "Kindred Connector Logs",
             "auto_inject": true,
             "js": "https://tealium-kiyoshi.s3.ap-northeast-1.amazonaws.com/connector_logs2/app.js",

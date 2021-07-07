@@ -16,9 +16,9 @@ function Krcl() {
     // tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
     this.events = {
         onFormSubmit: 'krclFormSubmit',
-        onRowSelect: 'udhclRowSelect',
-        onErrorLimitChange: 'udhclErrorLimitChange',
-        onBack: 'udhclBack'
+        onRowSelect: 'krclRowSelect',
+        onErrorLimitChange: 'krclErrorLimitChange',
+        onBack: 'krclBack'
     };
 
     this.DEFAULT_ERROR_LIMIT = 10;

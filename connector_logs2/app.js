@@ -183,7 +183,21 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
 
     console.log(`** aggData ** : ${JSON.stringify(aggData)}`);
 
+    var data = [];
+    for(k in aggData){
+        if(k.indexOf('@') >=0 && k.split('@').length >= 3){
+            var d = {};
+            d['date'] = k.split('@')[0];
+            d['connector'] = connMap[k.split('@')[1]];
+            d['action'] = actMap[k.split('@')[2]];
+            d['success'] = aggData[k]['success'];
+            d['error'] = aggData[k]['error'];
 
+            data.push(d);
+        }
+    }
+
+    console.log(`** data ** : ${data}`);
 }
 
 

@@ -274,7 +274,7 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
     const reqUrls = [];
     actionIds.forEach(function(complexId, index, array){
 
-        if(complexId.index("@") >= 0 && complexId.split("@").length >= 2){
+        if(complexId.indexOf("@") >= 0 && complexId.split("@").length >= 2){
             const connectorId = complexId.split('@')[0];
             const actionId = complexId.split('@')[1];
             const endpoint = `https://${location.hostname}/urest/datacloud/${account}/${profile}/audit/${connectorId}/${actionId}`;

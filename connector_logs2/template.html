@@ -378,8 +378,9 @@
 
             selectedConnectors.forEach(function(connectorId, index, array){
                 $.each(connectorsInfo[connectorId].actions, function (i, item) {
+                    var val = connectorId + "@" + item.id;
                     $('#actionsSelect').append($('<option>', { 
-                        value: connectorId + "@" + item.id,
+                        value: val,
                         text : item.title 
                     }));
                 });

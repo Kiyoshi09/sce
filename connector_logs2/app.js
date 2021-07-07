@@ -244,6 +244,8 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
 }
 
 function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
+    console.log("----- krclFormSubmit ----------");
+
     if (!actionIds) {
         tealiumTools.sendError('Error', 'Action(s) must be selected.');
         return;
@@ -256,7 +258,6 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
         return;
     }
 
-    console.log("----- krclFormSubmit ----------");
     console.log(`actionIds : ${actionIds}`);
     console.log(`from : ${from}`);
     console.log(`to : ${to}`);

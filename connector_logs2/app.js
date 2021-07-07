@@ -8,8 +8,8 @@
 
 "use strict";
 
-// namespace Udhcl = UDH Connector Logs
-function Udhcl() {
+// namespace Krcl = Kindred Connector Logs
+function Krcl() {
     // init event handlers for handlebarjs template
     // mapping of event <--> event handler
     // usage in handlebars template
@@ -27,7 +27,7 @@ function Udhcl() {
 
 }
 
-Udhcl.prototype.initSearchPage = function () {
+Krcl.prototype.initSearchPage = function () {
     // helper
     function base64EncodeUnicode(str) {
         // First we escape the string using encodeURIComponent to get the UTF-8 encoding of the characters, 
@@ -70,7 +70,7 @@ Udhcl.prototype.initSearchPage = function () {
     });
 }
 
-Udhcl.prototype.getConnectorsInfo = function () {
+Krcl.prototype.getConnectorsInfo = function () {
     var enabled = {
         true: 'Enabled',
         false: 'Disabled'
@@ -94,11 +94,11 @@ Udhcl.prototype.getConnectorsInfo = function () {
     return out;
 }
 
-Udhcl.prototype.getErrorLimitOptions = function () {
+Krcl.prototype.getErrorLimitOptions = function () {
     return [5, 10, 25, 50, 100];
 }
 
-Udhcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId, start, end, utcTime }) {
+Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId, start, end, utcTime }) {
     var account = gApp.inMemoryModels.account;
     var profile = gApp.inMemoryModels.profile;
     var utk = localStorage.utk;
@@ -138,7 +138,7 @@ Udhcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionI
     return data;
 }
 
-Udhcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId, start, end, limit }) {
+Krcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId, start, end, limit }) {
     var url = this.getErrorEndpoint(connectorId, actionId, start, end, limit);
     var data = [];
     try {
@@ -167,7 +167,7 @@ Udhcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId,
     };
 }
 
-Udhcl.prototype.reportError = function (msg) {
+Krcl.prototype.reportError = function (msg) {
     tealiumTools.send({
         data: {
             error: msg,
@@ -178,7 +178,7 @@ Udhcl.prototype.reportError = function (msg) {
     });
 }
 
-Udhcl.prototype.getErrorEndpoint = function (connectorId, actionId, start, end, limit) {
+Krcl.prototype.getErrorEndpoint = function (connectorId, actionId, start, end, limit) {
     var account = gApp.inMemoryModels.account;
     var profile = gApp.inMemoryModels.profile;
     var utk = localStorage.utk;
@@ -218,7 +218,7 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
         utcTime: utcTime
     };
 
-    udhcl.getConnectorSummaryLogs(params).then(data => {
+    krcl.getConnectorSummaryLogs(params).then(data => {
         if (errorOnly) {
             data = data.filter(row => row.error > 0);
         }
@@ -233,9 +233,9 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
                 logsOverviewString: JSON.stringify(data),
                 success: data.reduce((acc, cur) => { return acc + cur.success }, 0),
                 error: data.reduce((acc, cur) => { return acc + cur.error }, 0),
-                filename: ['connectorLogs', udhcl.ACCOUNT, udhcl.PROFILE, params.actionId].join('-') + '.csv'
+                filename: ['connectorLogs', krcl.ACCOUNT, krcl.PROFILE, params.actionId].join('-') + '.csv'
             },
-            event: udhcl.events,
+            event: krcl.events,
             ui: {
                 overview: true
             }
@@ -244,7 +244,7 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
 }
 
 function udhclRowSelect(params) {
-    udhcl.getConnectorErrorLogs(params).then(data => {
+    krcl.getConnectorErrorLogs(params).then(data => {
         if (!data || data.errors.length == 0) {
             tealiumTools.sendError('Error', `No data returned from API ${data.url}`);
             return;
@@ -252,13 +252,13 @@ function udhclRowSelect(params) {
         tealiumTools.send({
             data: {
                 url: data.url,
-                errorLimitOptions: udhcl.getErrorLimitOptions(),
-                errorLimit: params.limit || udhcl.DEFAULT_ERROR_LIMIT,
+                errorLimitOptions: krcl.getErrorLimitOptions(),
+                errorLimit: params.limit || krcl.DEFAULT_ERROR_LIMIT,
                 errors: data.errors,
                 count: data.errors.length,
                 existingParamsString: JSON.stringify(params),
             },
-            event: udhcl.events,
+            event: krcl.events,
             ui: {
                 detail: true
             }
@@ -273,9 +273,9 @@ function udhclErrorLimitChange(params) {
 
 function udhclBack() {
     // always go back to search page
-    udhcl.initSearchPage();
+    krcl.initSearchPage();
 }
 
 // ---  MAIN --- //
-window.udhcl = window.udhcl || new Udhcl();
-udhcl.initSearchPage();
+window.krcl = window.krcl || new Krcl();
+krcl.initSearchPage();

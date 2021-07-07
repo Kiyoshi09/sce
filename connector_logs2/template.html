@@ -270,6 +270,7 @@
         }
 
         // on connector selected, update actions dropdown
+        /*
         $('#connectorsInput').on('input', function(event){
             var connectorId = event.target.value;
             $('#actionsDd').empty();
@@ -280,6 +281,7 @@
                 }));
             });
         });
+        */
 
         // set previous selection if any
         if (window.sessionStorage){
@@ -305,6 +307,7 @@
         }
         
         // on search form submit, get logs overview
+        /* Original
         $('#udhclSubmit').click(function(event){
             event.preventDefault();
             var params = {};
@@ -329,6 +332,40 @@
             params.utcTime = $('#utcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
         });
+        */
+        // Kiyoshi modified
+        $('#udhclSubmit').click(function(event){
+            event.preventDefault();
+
+            var params = {};
+            /*
+            params.connectorId = $('#connectorsInput').val();
+            params.actionId = $('#actionsDd').val();
+            params.from = $('#fromDate').val();
+            params.to = $('#toDate').val();
+            */
+            params.connectorIds = $('#connectorsSelect').val();
+            params.actionIds = $('#a').val();
+
+
+
+            if (!params.connectorId || !params.actionId){
+                alert('Fill in required fields');
+                return;
+            }
+
+            // remember user selections
+            if (window.sessionStorage){
+                sessionStorage.setItem('connectorId', params.connectorId);
+                sessionStorage.setItem('actionId', params.actionId);
+                sessionStorage.setItem('from', params.from);
+                sessionStorage.setItem('to', params.to);
+            }
+            params.errorOnly = $('#errorOnly').is(":checked");
+            params.utcTime = $('#utcTime').is(":checked");
+            tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
+        }
+
 
         // Kiyoshi : on click connectors list
         var selectedConnectors2Actions = [];
@@ -342,7 +379,7 @@
             selectedConnectors.forEach(function(connectorId, index, array){
                 $.each(connectorsInfo[connectorId].actions, function (i, item) {
                     $('#actionsSelect').append($('<option>', { 
-                        value: item.id,
+                        value: connectorId + "@" + item.id,
                         text : item.title 
                     }));
                 });

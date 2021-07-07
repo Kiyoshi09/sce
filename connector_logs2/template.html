@@ -106,12 +106,12 @@
         <!-- Kiyoshi -->
         <div class="form-group">
                 <label for="fromDate">From</label>
-                <input class="form-control" type="date" id="fromDate" required>
+                <input class="form-control" type="date" id="krclFromDate" required>
         </div>
 
         <div class="form-group">
                 <label for="toDate">To</label>
-                <input class="form-control" type="date" id="toDate" required>
+                <input class="form-control" type="date" id="krclToDate" required>
         </div>
         <!-- Kiyoshi -->
 
@@ -131,13 +131,13 @@
                 <label>Options</label>
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <input type="checkbox" id="errorOnly">
+                        <input type="checkbox" id="krclErrorOnly">
                     </span>
                     <label class="form-control" for="errorOnly">Show logs with error only</label>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <input type="checkbox" id="utcTime">
+                        <input type="checkbox" id="krclUtcTime">
                     </span>
                     <label class="form-control" for="utcTime">UTC time (default is local time)</label>
                 </div>
@@ -145,7 +145,7 @@
 
       </form>
       <div class="btn-group">
-            <button type="submit" id="udhclSubmit" class="btn btn-primary">Submit</button>
+            <button type="submit" id="krclSubmit" class="btn btn-primary">Submit</button>
       </div>
       {{/if}}
 
@@ -259,8 +259,8 @@
 
         // set default datetime value
         var todayDate = getYYYYMMDD();
-        var fromDate = document.getElementById('fromDate');
-        var toDate = document.getElementById('toDate');
+        var fromDate = document.getElementById('krclFromDate');
+        var toDate = document.getElementById('krclToDate');
 
         // todo: what is the min date value?
         if (fromDate){
@@ -339,13 +339,13 @@
         });
         */
         // Kiyoshi modified
-        $('#udhclSubmit').click(function(event){
+        $('#krclSubmit').click(function(event){
             event.preventDefault();
 
             var params = {};
             params.actionIds = $('#actionsSelect').val(); // data format : connectorId@actionId
-            params.from = $('#fromDate').val() + "T00:00";
-            params.to = $('#toDate').val() + "T23:59";
+            params.from = $('#krclFromDate').val() + "T00:00";
+            params.to = $('#krclToDate').val() + "T23:59";
 
             if (!params.actionIds){
                 alert('Fill in required fields');
@@ -356,12 +356,12 @@
             if (window.sessionStorage){
                 sessionStorage.setItem('krcl_connectors',$('#connectorsSelect').val().join(','));
                 sessionStorage.setItem('krcl_actions',$('#actionsSelect').val().join(','));
-                sessionStorage.setItem('krcl_from',$('#fromDate').val());
-                sessionStorage.setItem('krcl_to',$('#toDate').val());
+                sessionStorage.setItem('krcl_from',$('#krclFromDate').val());
+                sessionStorage.setItem('krcl_to',$('#krclToDate').val());
             }
 
-            params.errorOnly = $('#errorOnly').is(":checked");
-            params.utcTime = $('#utcTime').is(":checked");
+            params.errorOnly = $('#krclErrorOnly').is(":checked");
+            params.utcTime = $('#krclUtcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
         });
 

@@ -129,12 +129,14 @@
 
         <div class="form-group">
                 <label>Options</label>
+                <!--
                 <div class="input-group">
                     <span class="input-group-addon">
                         <input type="checkbox" id="krclErrorOnly">
                     </span>
                     <label class="form-control" for="errorOnly">Show logs with error only</label>
                 </div>
+                -->
                 <div class="input-group">
                     <span class="input-group-addon">
                         <input type="checkbox" id="krclUtcTime">
@@ -375,7 +377,8 @@
                 sessionStorage.setItem('krcl_to',$('#krclToDate').val());
             }
 
-            params.errorOnly = $('#krclErrorOnly').is(":checked");
+            //params.errorOnly = $('#krclErrorOnly').is(":checked");
+            params.errorOnly = false; // fixed
             params.utcTime = $('#krclUtcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onKrclFormSubmit}}', params);
         });

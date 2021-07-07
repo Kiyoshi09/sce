@@ -138,7 +138,7 @@ Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId
     return data;
 }
 
-Krcl.prototype.getConnectorSummaryLogs2 = async function(requests) {
+Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap) {
 
     console.log("------ getConnectorSummaryLogs2 -------");
 
@@ -154,12 +154,21 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests) {
                                             })
                                         )
                                     );
-
     // debug
     console.log(`length of responses : ${responses.length}`);
+    
+    // format data
     responses.forEach(function(res, index, array){
         console.log(`${index} : ${JSON.stringify(res)}`);
-    })
+
+        res.forEach(function(r,j,a){
+            console.log(`--> ${i} : ${r}`);
+        })
+
+
+    });
+
+
 }
 
 
@@ -284,6 +293,7 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
         return;
     }
 
+    /*
     console.log(`actionIds : ${actionIds}`);
     console.log(`from : ${from}`);
     console.log(`to : ${to}`);
@@ -295,14 +305,15 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
     for(let a in actMap){
         console.log(`${a}:${actMap[a]}`);
     }
+    */
 
     const account = gApp.inMemoryModels.account;
     const profile = gApp.inMemoryModels.profile;
     const utk = localStorage.utk;
 
-    console.log(`account = ${account}`);
-    console.log(`profile = ${profile}`);
-    console.log(`utk = ${utk}`);
+    //console.log(`account = ${account}`);
+    //console.log(`profile = ${profile}`);
+    //console.log(`utk = ${utk}`);
 
     // create requests
     const reqUrls = [];
@@ -320,7 +331,6 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
                 end: (new Date(to).toISOString()),
                 utcTime: utcTime
             });
-
             reqUrls.push(reqUrl);
         }
     });
@@ -338,7 +348,7 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
     };
     */
 
-    krcl.getConnectorSummaryLogs2(reqUrls);
+    krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
 }
 
 

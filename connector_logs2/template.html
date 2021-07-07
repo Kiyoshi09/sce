@@ -61,7 +61,7 @@
         <div class="form-group">
 
         <!-- Kiyoshi -->
-        <p style="color:red">version 0.1.2</p>
+        <p style="color:red">version 0.1.3</p>
         <div class="row">
             <label for="connectorsInput">All Connectors</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
@@ -293,12 +293,12 @@
             var from = sessionStorage.getItem('krcl_from');
             var to = sessionStorage.getItem('krcl_to');
 
-            if (connectorId){
+            if (connectorIds){
                 var c = connectorIds.split(',');
                 $('#connectorsSelect').val(c);
                 $('#connectorsSelect').trigger('click');
             }
-            if (actionId){
+            if (actionIds){
                 var a = actionIds.split(',');
                 $('#actionsSelect').val(a);
             }

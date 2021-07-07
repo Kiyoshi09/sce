@@ -162,7 +162,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
         console.log(`${index} : ${JSON.stringify(res)}`);
 
         res.forEach(function(r,j,a){
-            console.log(`--> ${i} : ${r}`);
+            console.log(`--> ${j} : ${r}`);
         })
 
 

@@ -360,16 +360,16 @@ function udhclRowSelect(params) {
     });
 }
 
-function udhclErrorLimitChange(params) {
+function krclErrorLimitChange(params) {
     // just like a row select but with 'limit' parameters
-    udhclRowSelect(params);
+    krclRowSelect(params);
 }
 
-function udhclBack() {
+function krclBack() {
     // always go back to search page
     krcl.initSearchPage();
 }
 
 // ---  MAIN --- //
-window.krcl = window.udhcl || new Krcl();
+window.krcl = window.krcl || new Krcl();
 krcl.initSearchPage();

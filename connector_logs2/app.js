@@ -256,10 +256,18 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
         return;
     }
 
+    console.log("----- krclFormSubmit ----------");
+    console.log(`actionIds : ${actionIds}`);
+    console.log(`from : ${from}`);
+    console.log(`to : ${to}`);
+
     const account = gApp.inMemoryModels.account;
     const profile = gApp.inMemoryModels.profile;
     const utk = localStorage.utk;
 
+    console.log(`account = ${account}`);
+    console.log(`profile = ${profile}`);
+    console.log(`utk = ${utk}`);
 
     // create requests
     const reqUrls = [];

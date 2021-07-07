@@ -61,7 +61,7 @@
         <div class="form-group">
 
         <!-- Kiyoshi -->
-        <p style="color:red">version 0.0.3</p>
+        <p style="color:red">version 0.0.4</p>
         <div class="row">
             <label for="connectorsInput">All Connectors</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
@@ -384,7 +384,7 @@
             selectedConnectors.forEach(function(connectorId, index, array){
                 $.each(connectorsInfo[connectorId].actions, function (i, item) {
                     var val = connectorId + "@" + item.id;
-                    console.log("selected actionid : " + item.id);
+                    console.log("selected actionid : " + val);
 
                     $('#actionsSelect').append($('<option>', { 
                         value: val,

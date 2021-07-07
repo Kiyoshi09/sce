@@ -61,7 +61,7 @@
         <div class="form-group">
 
         <!-- Kiyoshi -->
-        <p style="color:red">version 0.1.1</p>
+        <p style="color:red">version 0.1.2</p>
         <div class="row">
             <label for="connectorsInput">All Connectors</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
@@ -287,19 +287,20 @@
         */
 
         // set previous selection if any
-        /*
         if (window.sessionStorage){
-            var connectorId = sessionStorage.getItem('connectorId');
-            var actionId = sessionStorage.getItem('actionId');
-            var from = sessionStorage.getItem('from');
-            var to = sessionStorage.getItem('to');
+            var connectorIds = sessionStorage.getItem('krcl_connectors');
+            var actionIds = sessionStorage.getItem('krcl_actions');
+            var from = sessionStorage.getItem('krcl_from');
+            var to = sessionStorage.getItem('krcl_to');
 
             if (connectorId){
-                $('#connectorsInput').val(connectorId);
-                $('#connectorsInput').trigger('input');
+                var c = connectorIds.split(',');
+                $('#connectorsSelect').val(c);
+                $('#connectorsSelect').trigger('click');
             }
             if (actionId){
-                $('#actionsDd').val(actionId);
+                var a = actionIds.split(',');
+                $('#actionsSelect').val(a);
             }
             if (from && fromDate){
                 fromDate.value = from;
@@ -309,7 +310,6 @@
                 toDate.value = to;
             }
         }
-        */
         
         // on search form submit, get logs overview
         /* Original
@@ -353,14 +353,13 @@
             }
 
             // remember user selections
-            /*
             if (window.sessionStorage){
-                sessionStorage.setItem('connectorId', params.connectorId);
-                sessionStorage.setItem('actionId', params.actionId);
-                sessionStorage.setItem('from', params.from);
-                sessionStorage.setItem('to', params.to);
+                sessionStorage.setItem('krcl_connectors',$('#connectorsSelect').val().join(','));
+                sessionStorage.setItem('krcl_actions',$('#actionsSelect').val().join(','));
+                sessionStorage.setItem('krcl_from',$('#fromDate').val());
+                sessionStorage.setItem('krcl_to',$('#toDate').val());
             }
-            */
+
             params.errorOnly = $('#errorOnly').is(":checked");
             params.utcTime = $('#utcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);

@@ -362,7 +362,7 @@
 
             params.errorOnly = $('#krclErrorOnly').is(":checked");
             params.utcTime = $('#krclUtcTime').is(":checked");
-            tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
+            tealiumTools.invokeFunction('{{event.onKrclFormSubmit}}', params);
         });
 
 
@@ -409,7 +409,7 @@
                 return;
             }
 
-            tealiumTools.invokeFunction('{{event.onRowSelect}}', params);
+            tealiumTools.invokeFunction('{{event.onKrclRowSelect}}', params);
         });
 
         // on export button click, export table data to csv
@@ -489,7 +489,7 @@
             {{/if}}
 
             params.limit = errorLimit;
-            tealiumTools.invokeFunction('{{event.onErrorLimitChange}}', params);
+            tealiumTools.invokeFunction('{{event.onKrclErrorLimitChange}}', params);
         });
 
         // on error list item click, open new tab of error data
@@ -499,7 +499,7 @@
 
         // on back, go to search page
         $('#udhclBack').click(function(){
-            tealiumTools.invokeFunction('{{event.onBack}}');
+            tealiumTools.invokeFunction('{{event.onKrclBack}}');
         });
 
     </script>

@@ -15,10 +15,10 @@ function Krcl() {
     // usage in handlebars template
     // tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
     this.events = {
-        onFormSubmit: 'krclFormSubmit',
-        onRowSelect: 'krclRowSelect',
-        onErrorLimitChange: 'krclErrorLimitChange',
-        onBack: 'krclBack'
+        onKrclFormSubmit: 'krclFormSubmit',
+        onKrclRowSelect: 'krclRowSelect',
+        onKrclErrorLimitChange: 'krclErrorLimitChange',
+        onKrclBack: 'krclBack'
     };
 
     this.DEFAULT_ERROR_LIMIT = 10;

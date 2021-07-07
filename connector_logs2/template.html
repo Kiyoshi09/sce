@@ -350,7 +350,7 @@
             $('#actionsSelect option:selected').each(function(){
                 var t = $(this).val();
                 if(t.indexOf('@') >= 0 && t.split('@').length >= 2){
-                    var actId = t[1];
+                    var actId = t.split('@')[1];
                     actId2Name[actId] = $(this).text();
                 }
             });

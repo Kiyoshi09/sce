@@ -157,16 +157,31 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     // debug
     console.log(`length of responses : ${responses.length}`);
     
-    // format data
+    // aggregate data
+    const aggData = {};
     responses.forEach(function(res, index, array){
         console.log(`${index} : ${JSON.stringify(res)}`);
-
         res.forEach(function(r,j,a){
-            console.log(`--> ${j} : ${r}`);
+            const dt   = r.start_time.substr(0,10);
+            const conn = r.vendor_id;
+            const act  = r.action_id;
+            
+            const k = dt + '@' + conn + '@' + act;
+
+            if(typeof aggData.k !== 'undefined'){
+                aggData[k].success += r.success_count;
+                aggData[k].error += r.error_count;
+            }
+            else{
+                aggData[k] = {
+                   'success': r.success_count, 
+                   'error': r.error_count, 
+                };
+            }
         })
-
-
     });
+
+    console.log(`** aggData ** : ${JSON.stringify(aggData)}`);
 
 
 }

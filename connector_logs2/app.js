@@ -158,7 +158,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     console.log(`length of responses : ${responses.length}`);
     
     // aggregate data
-    const aggData = {};
+    var aggData = {};
     responses.forEach(function(res, index, array){
         console.log(`${index} : ${JSON.stringify(res)}`);
         res.forEach(function(r,j,a){

@@ -143,12 +143,23 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests) {
     console.log("------ getConnectorSummaryLogs2 -------");
 
     // Run all the requests asynchronously
-    const responses = await Promise.all(requests.map(request => fetch(request)));
+    const responses = await Promise.all(
+                                        requests.map(
+                                            request => fetch(request)
+                                                        .then(response => {
+                                                            if(response.ok){
+                                                                return response.json();
+                                                            }else{
+                                                                return {"error": response.status}
+                                                            }
+                                                        })
+                                            )
+                                        );
 
     // debug
     console.log(`length of responses : ${responses.length}`);
-    responses.forEach(function(response, index, array){
-        console.log(`${index} : ${JSON.stringify(response.json())}`);
+    responses.forEach(function(res, index, array){
+        console.log(`${index} : ${JSON.stringify(res)}`);
     })
 }
 

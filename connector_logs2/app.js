@@ -320,7 +320,7 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
     };
     */
 
-
+    await krcl.getConnectorSummaryLogs2(reqUrls);
 }
 
 

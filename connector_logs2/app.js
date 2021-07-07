@@ -168,7 +168,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
             
             const k = dt + '@' + conn + '@' + act;
 
-            if(typeof aggData.k !== 'undefined'){
+            if(typeof aggData[k] !== 'undefined'){
                 aggData[k].success += r.success_count;
                 aggData[k].error += r.error_count;
             }

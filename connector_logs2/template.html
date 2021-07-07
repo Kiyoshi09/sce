@@ -343,29 +343,24 @@
             event.preventDefault();
 
             var params = {};
-            /*
-            params.connectorId = $('#connectorsInput').val();
-            params.actionId = $('#actionsDd').val();
-            params.from = $('#fromDate').val();
-            params.to = $('#toDate').val();
-            */
+            params.actionIds = $('#actionsSelect').val(); // data format : connectorId@actionId
+            params.from = $('#fromDate').val() + "T00:00";
+            params.to = $('#toDate').val() + "T23:59";
 
-            //params.connectorIds = $('#connectorsSelect').val();
-
-
-
-            if (!params.connectorId || !params.actionId){
+            if (!params.actionIds){
                 alert('Fill in required fields');
                 return;
             }
 
             // remember user selections
+            /*
             if (window.sessionStorage){
                 sessionStorage.setItem('connectorId', params.connectorId);
                 sessionStorage.setItem('actionId', params.actionId);
                 sessionStorage.setItem('from', params.from);
                 sessionStorage.setItem('to', params.to);
             }
+            */
             params.errorOnly = $('#errorOnly').is(":checked");
             params.utcTime = $('#utcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);

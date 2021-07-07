@@ -15,7 +15,7 @@ function Krcl() {
     // usage in handlebars template
     // tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
     this.events = {
-        onFormSubmit: 'udhclFormSubmit',
+        onFormSubmit: 'krclFormSubmit',
         onRowSelect: 'udhclRowSelect',
         onErrorLimitChange: 'udhclErrorLimitChange',
         onBack: 'udhclBack'
@@ -242,6 +242,59 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
         });
     });
 }
+
+function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
+    if (!actionIds) {
+        tealiumTools.sendError('Error', 'Action(s) must be selected.');
+        return;
+    }
+
+    // note date range will be set default from UI
+    // in format of string - yyyy-mm-ddThh:mm
+    if (!from || !to) {
+        tealiumTools.sendError('Error', 'Date range is required.');
+        return;
+    }
+
+    const account = gApp.inMemoryModels.account;
+    const profile = gApp.inMemoryModels.profile;
+    const utk = localStorage.utk;
+
+
+    // create requests
+    const reqUrls = [];
+    actionIds.forEach(function(complexId, index, array){
+
+        if(complexId.index("@") >= 0 && complexId.split("@").length >= 2){
+            const connectorId = complexId.split('@')[0];
+            const actionId = complexId.split('@')[1];
+            const endpoint = `https://${location.hostname}/urest/datacloud/${account}/${profile}/audit/${connectorId}/${actionId}`;
+
+            const reqUrl = new URL(endpoint);
+            reqUrl.search = new URLSearchParams({
+                utk: utk,
+                start: (new Date(from).toISOString()),
+                end: (new Date(to).toISOString()),
+                utcTime: utcTime
+            });
+
+            reqUrls.push(reqUrl);
+        }
+    });
+
+    // debug
+    console.log(`request urls : ${reqUrls}`);
+
+    /*
+    var params = {
+        actionIds: actionIds,
+        start: (new Date(from).toISOString()),
+        end: (new Date(to).toISOString()),
+        utcTime: utcTime
+    };
+    */
+}
+
 
 function udhclRowSelect(params) {
     udhcl.getConnectorErrorLogs(params).then(data => {

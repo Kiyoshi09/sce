@@ -338,11 +338,26 @@
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
         });
         */
-        // Kiyoshi modified
+        // Kiyoshi : onSubmit
         $('#krclSubmit').click(function(event){
             event.preventDefault();
 
+            var connId2Name = {};
+            $('#connectorsSelect option:selected').each(function(){
+                connId2Name[$(this).val()] = $(this).text();
+            })
+            var actId2Name = {};
+            $('#actionsSelect option:selected').each(function(){
+                var t = $(this).val();
+                if(t.indexOf('@') >= 0 && t.split('@').length >= 2){
+                    var actId = t[1];
+                    actId2Name[actId] = $(this).text();
+                }
+            });
+
             var params = {};
+            params.connMap = connId2Name;
+            params.actMap  = actId2Name;
             params.actionIds = $('#actionsSelect').val(); // data format : connectorId@actionId
             params.from = $('#krclFromDate').val() + "T00:00";
             params.to = $('#krclToDate').val() + "T23:59";

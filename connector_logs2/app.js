@@ -143,18 +143,17 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests) {
     console.log("------ getConnectorSummaryLogs2 -------");
 
     // Run all the requests asynchronously
-    const responses = await Promise.all(
-                                        requests.map(
-                                            request => fetch(request)
-                                                        .then(response => {
-                                                            if(response.ok){
-                                                                return response.json();
-                                                            }else{
-                                                                return {"error": response.status}
-                                                            }
-                                                        })
-                                            )
-                                        );
+    const responses = 
+            await Promise.all(requests.map(request => fetch(request)
+                                            .then(response => {
+                                                if(response.ok){
+                                                    return response.json();
+                                                }else{
+                                                    return {"error": response.status}
+                                                }
+                                            })
+                                        )
+                                    );
 
     // debug
     console.log(`length of responses : ${responses.length}`);
@@ -270,7 +269,7 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
     });
 }
 
-function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
+function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTime }) {
     console.log("----- krclFormSubmit ----------");
 
     if (!actionIds) {
@@ -288,6 +287,14 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
     console.log(`actionIds : ${actionIds}`);
     console.log(`from : ${from}`);
     console.log(`to : ${to}`);
+    console.log('/// connMap ////');
+    for(let c in connMap){
+        console.log(`${c}:${connMap[c]}`);
+    }
+    console.log('/// actMap ////');
+    for(let a in actMap){
+        console.log(`${a}:${actMap[a]}`);
+    }
 
     const account = gApp.inMemoryModels.account;
     const profile = gApp.inMemoryModels.profile;

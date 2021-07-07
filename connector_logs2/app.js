@@ -184,7 +184,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     console.log(`** aggData ** : ${JSON.stringify(aggData)}`);
 
     var data = [];
-    for(k in aggData){
+    for(let k in aggData){
         if(k.indexOf('@') >=0 && k.split('@').length >= 3){
             var d = {};
             d['date'] = k.split('@')[0];

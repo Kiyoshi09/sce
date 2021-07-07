@@ -76,7 +76,7 @@
         <div class="row">
             <label for="actionsDd">Actions of Selected Connectors</label>
             <select id="actionsSelect" class="form-select my-selector" multiple size="7">
-                <option></option>
+                <option disabled>-- select an option --</option>
             </select>
         </div>
         <!-- // Kiyoshi -->
@@ -326,7 +326,7 @@
 
             selectedConnectors.forEach(function(connectorId, index, array){
                 $.each(connectorsInfo[connectorId].actions, function (i, item) {
-                    $('#actionsDd').append($('<option>', { 
+                    $('#actionsSelect').append($('<option>', { 
                         value: item.id,
                         text : item.title 
                     }));

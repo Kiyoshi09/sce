@@ -197,7 +197,10 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
         }
     }
 
-    console.log(`** data ** : ${data}`);
+    console.log(`** data **`);
+    data.map(row => {
+        console.log(`date:${row.data}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
+    })
 }
 
 

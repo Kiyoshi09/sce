@@ -138,6 +138,22 @@ Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId
     return data;
 }
 
+Krcl.prototype.getConnectorSummaryLogs2 = async function(requests) {
+
+    console.log("------ getConnectorSummaryLogs2 -------");
+
+    // Run all the requests asynchronously
+    const responses = await Promise.all(requests.map(request => fetch(request)));
+
+    // debug
+    console.log(`length of responses : ${responses.length}`);
+    responses.forEach(function(response, index, array){
+        console.log(`${index} : ${JSON.stringify(response.json())}`);
+    })
+}
+
+
+
 Krcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId, start, end, limit }) {
     var url = this.getErrorEndpoint(connectorId, actionId, start, end, limit);
     var data = [];
@@ -292,6 +308,7 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
     });
 
     // debug
+    console.log(`request urls length : ${reqUrls.length}`);
     console.log(`request urls : ${reqUrls}`);
 
     /*
@@ -302,7 +319,11 @@ function krclFormSubmit({ actionIds, from, to, errorOnly, utcTime }) {
         utcTime: utcTime
     };
     */
+
+
 }
+
+
 
 
 function udhclRowSelect(params) {

@@ -60,8 +60,8 @@
     <form>
         <div class="form-group">
 
-        <!-- Kiyoshi // -->
-        <p style="color:red">version 0.0.2</p>
+        <!-- Kiyoshi -->
+        <p style="color:red">version 0.0.3</p>
         <div class="row">
             <label for="connectorsInput">All Connectors</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
@@ -80,7 +80,9 @@
                 <option>-- select an option --</option>
             </select>
         </div>
-        <!-- // Kiyoshi -->
+
+        </div>
+        <!-- Kiyoshi -->
 
 
           <!-- original 
@@ -101,7 +103,7 @@
         </div>
          -->
 
-        <!-- Kiyoshi // -->
+        <!-- Kiyoshi -->
         <div class="form-group">
                 <label for="fromDate">From</label>
                 <input class="form-control" type="date" id="fromDate" required>
@@ -111,7 +113,7 @@
                 <label for="toDate">To</label>
                 <input class="form-control" type="date" id="toDate" required>
         </div>
-        <!--//  Kiyoshi -->
+        <!-- Kiyoshi -->
 
         <!-- original
         <div class="form-group">
@@ -285,6 +287,7 @@
         */
 
         // set previous selection if any
+        /*
         if (window.sessionStorage){
             var connectorId = sessionStorage.getItem('connectorId');
             var actionId = sessionStorage.getItem('actionId');
@@ -306,6 +309,7 @@
                 toDate.value = to;
             }
         }
+        */
         
         // on search form submit, get logs overview
         /* Original
@@ -365,7 +369,7 @@
             params.errorOnly = $('#errorOnly').is(":checked");
             params.utcTime = $('#utcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
-        }
+        });
 
 
         // Kiyoshi : on click connectors list

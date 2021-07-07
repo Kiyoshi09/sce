@@ -65,7 +65,7 @@
             <label for="connectorsInput">All Connectors</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
                 <option selected>-- Connectors --</option>
-                <datalist id="connectorsDd">
+                <datalist id="connectorsDd2">
                     {{#each data.connectorsInfo}}
                     <option value="{{@key}}">{{this.title}}</option>
                     {{/each}}
@@ -73,14 +73,12 @@
             </select>
         </div>
 
-        <!--
         <div class="row">
             <label for="actionsDd">Actions of Selected Connectors</label>
-            <select class="form-select my-selector" multiple size="7">
+            <select id="actionsSelect" class="form-select my-selector" multiple size="7">
                 <option></option>
             </select>
         </div>
-        -->
         <!-- // Kiyoshi -->
 
 
@@ -320,9 +318,21 @@
         // Kiyoshi : on click connectors list
         var selectedConnectors2Actions = [];
         $('#connectorsSelect').click(function(event){
-            var selectedConnector = $(this).val();
+            var selectedConnectors = $(this).val();
+            //console.log("selected connector : " + selectedConnectors);
+            
+            // update actions select area
+            $('#actionsSelect').empty();
 
-            console.log("selected connector : " + selectedConnector);
+            selectedConnectors.forEach(function(connectorId, index, array){
+                $.each(connectorsInfo[connectorId].actions, function (i, item) {
+                    $('#actionsDd').append($('<option>', { 
+                        value: item.id,
+                        text : item.title 
+                    }));
+                });
+            })
+
         })
 
         /**

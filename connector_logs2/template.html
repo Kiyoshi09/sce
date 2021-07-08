@@ -196,44 +196,69 @@
         // on search form submit, get logs overview
         $('#krclSubmit').click(function(event){
 
-            // disable browser default behavior
-            event.preventDefault();
-            
-            // Disable Submit button
-            $(this).prop('disabled', true);
-            $(this).text('Requesting...');
+            // validate input values
+            let errorFlag = 0;
+            const actionIds = $('#actionsSelect').val();
+            const fromDate  = $('#krclFromDate').val();
+            const toDate    = $('#krclToDate').val();
 
-            // map connectorID to connector name
-            var connId2Name = {};
-            $('#connectorsSelect option:selected').each(function(){
-                connId2Name[$(this).val()] = $(this).text();
-            });
+            if(actionIds.length == 0){
+                errorFlag = 1;
+            }
 
-            // map action ID to action name
-            var actId2Name = {};
-            $('#actionsSelect option:selected').each(function(){
-                var t = $(this).val();
-                if(t.indexOf('@') >= 0 && t.split('@').length >= 2){
-                    var actId = t.split('@')[1];
-                    actId2Name[actId] = $(this).text();
-                }
-            });
+            try{
+                new Date(fromDate);
+                new Date(toDate);
+            }
+            catch(e){
+                errorFlag = 2;
+            }
+
+            const s = new Date(fromDate);
+            const e = new Date(toDate);
+
+            if(e.getTime() < s.getTime()){
+                errorFlag = 3;
+            }
+
+            // Map
+            const connId2Name = {};
+            const actId2Name = {};
+
+            if(errorFlag == 0){
+                // disable browser default behavior
+                event.preventDefault();
+                
+                // Disable Submit button
+                $(this).prop('disabled', true);
+                $(this).text('Requesting...');
+
+                // map connectorID to connector name
+                $('#connectorsSelect option:selected').each(function(){
+                    connId2Name[$(this).val()] = $(this).text();
+                });
+
+                // map action ID to action name
+                $('#actionsSelect option:selected').each(function(){
+                    var t = $(this).val();
+                    if(t.indexOf('@') >= 0 && t.split('@').length >= 2){
+                        var actId = t.split('@')[1];
+                        actId2Name[actId] = $(this).text();
+                    }
+                });
+            }
 
             // params for sending to app.js
             var params = {};
             params.connMap = connId2Name;
             params.actMap  = actId2Name;
-            params.actionIds = $('#actionsSelect').val();
-            params.from    = $('#krclFromDate').val() + "T00:00";
-            params.to      = $('#krclToDate').val()   + "T23:59";
-
-            if (!params.actionIds){
-                alert('Fill in required fields');
-                return;
-            }
-
+            params.actionIds = actionIds;
+            params.from    = fromDate + "T00:00";
+            params.to      = toDate   + "T23:59";
             params.errorOnly = false; // fixed
             params.utcTime = $('#krclUtcTime').is(":checked");
+            params.errorFlag = errorFlag;
+
             tealiumTools.invokeFunction('{{event.onKrclFormSubmit}}', params);
         });
 

@@ -170,24 +170,19 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
 }
 
 // --- HANDLEBARS EVENT HANDLERS --- //
-function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTime }) {
+function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTime, errorFlag }) {
 
     // Validate input values
-    if (!actionIds || actionIds.length == 0) {
+    if(errorFlag == 1){
         tealiumTools.sendError('Error', 'Action(s) must be selected.');
         return;
     }
-
-    try{
-        let s = new Date(from);
-        let e = new Date(from);
-
-        if(s.getTime() > e.getTime()){
-            tealiumTools.sendError('Error', 'To date must be after From date');
-            return;
-        }
-    }catch(e){
+    else if(errorFlag == 2){
         tealiumTools.sendError('Error', 'From or To (or both) dates are invalid');
+        return;
+    }
+    else if(errorFlag == 3){
+        tealiumTools.sendError('Error', 'To date must be after From date');
         return;
     }
 

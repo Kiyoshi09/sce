@@ -214,6 +214,10 @@
                 errorFlag = 2;
             }
 
+            if(s.toString() === 'Invalid Date' || e.toString() === 'Invalid Date'){
+                errorFlag = 2;
+            }
+
             if(e.getTime() < s.getTime()){
                 errorFlag = 3;
             }

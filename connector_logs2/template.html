@@ -207,15 +207,12 @@
             }
 
             try{
-                new Date(fromDate);
-                new Date(toDate);
+                var s = new Date(fromDate);
+                var e = new Date(toDate);
             }
             catch(e){
                 errorFlag = 2;
             }
-
-            const s = new Date(fromDate);
-            const e = new Date(toDate);
 
             if(e.getTime() < s.getTime()){
                 errorFlag = 3;

@@ -147,6 +147,11 @@
       </footer>
       
     <script type="text/javascript">
+
+        // Enable Submit button
+        $('#krclSubmit').prop('disabled', false);
+        $('#krclSubmit').text('Submit');
+
         function getYYYYMMDD(d = new Date()) {
             var yyyy = d.getFullYear().toString();
             var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based    
@@ -257,11 +262,6 @@
          * */
         // on export button click, export table data to csv
         $('#krclExport').click(function(){
-
-            // Enable Submit button
-            $('#krclSubmit').prop('disabled', false);
-            $('#krclSubmit').text('Submit');
-
             var csvContent = 'data:text/csv;charset=utf-8,';
             var rows = [];
 
@@ -288,10 +288,6 @@
 
         // on back, go to search page
         $('#krclBack').click(function(){
-            // Enable Submit button
-            $('#krclSubmit').prop('disabled', false);
-            $('#krclSubmit').text('Submit');
-
             tealiumTools.invokeFunction('{{event.onKrclBack}}');
         });
 

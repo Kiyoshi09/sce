@@ -172,17 +172,25 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
 // --- HANDLEBARS EVENT HANDLERS --- //
 function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTime }) {
 
-    if (!actionIds) {
+    // Validate input values
+    if (!actionIds || actionIds.length == 0) {
         tealiumTools.sendError('Error', 'Action(s) must be selected.');
         return;
     }
 
-    // note date range will be set default from UI
-    // in format of string - yyyy-mm-ddThh:mm
-    if (!from || !to) {
-        tealiumTools.sendError('Error', 'Date range is required.');
+    try{
+        let s = new Date(from);
+        let e = new Date(from);
+
+        if(s.getTime() > e.getTime()){
+            tealiumTools.sendError('Error', 'To date must be after From date');
+            return;
+        }
+    }catch(e){
+        tealiumTools.sendError('Error', 'From or To (or both) dates are invalid');
         return;
     }
+
 
     const account = gApp.inMemoryModels.account;
     const profile = gApp.inMemoryModels.profile;

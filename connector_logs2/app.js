@@ -117,10 +117,11 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
             console.log(`date st : ${st}`);
 
             st = utcTime ? st : st.setMinutes(st.getMinutes() + (0.0 - st.getTimezoneOffset()));
+            let sst = new Date(st);
 
-            console.log(`** st ** : ${st}`);
+            console.log(`** sst ** : ${sst}`);
 
-            const dt   = st.toLocaleDateString().substr(0,10);
+            const dt   = sst.toLocaleDateString().substr(0,10);
 
             console.log(`** dt ** : ${dt}`);
 

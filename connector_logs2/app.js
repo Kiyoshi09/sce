@@ -112,9 +112,8 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     var aggData = {};
     responses.forEach(function(res, index, array){
         res.forEach(function(r,j,a){
-            let st = new Date(r.start_time);
 
-            const dt   = st.toLocaleDateString().substr(0,10);
+            const dt   = r.start_time.substr(0,10);
             const conn = r.vendor_id;
             const act  = r.action_id;
             
@@ -205,8 +204,8 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
             const reqUrl = new URL(endpoint);
             reqUrl.search = new URLSearchParams({
                 utk: utk,
-                start: (new Date(from).toISOString()),
-                end: (new Date(to).toISOString()),
+                start: utcTime ? (new Date(from).toISOString()) : (new Date(from)),
+                end: utcTime ? (new Date(to).toISOString()) : (new Date(to)),
                 utcTime: utcTime
             });
             reqUrls.push(reqUrl);

@@ -441,6 +441,10 @@
 
         // on export button click, export table data to csv
         $('#krclExport').click(function(){
+
+            // debug
+            console.log('clicked Export button .....');
+
             // Enable Submit button
             $('$krclSubmit').prop('disabled', false);
             $('$krclSubmit').text('Submit');
@@ -459,6 +463,9 @@
             csvContent += rows.map(row => {
                 return [row.date, row.connector, row.action, row.success, row.error].join(',');
             }).join('\r\n');
+
+            // debug
+            console.log(`csvContent : ${csvContent}`);
         
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
@@ -532,6 +539,9 @@
 
         // on back, go to search page
         $('#krclBack').click(function(){
+
+            // debug
+            console.log('clicked Back button .....');
 
             // Enable Submit button
             $('$krclSubmit').prop('disabled', false);

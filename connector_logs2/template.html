@@ -151,7 +151,7 @@
 
       {{#if ui.overview}}
       <div>
-        <table class="table table-striped table-hover" id="udhclTable">
+        <table class="table table-striped table-hover" id="krclTable">
                 <caption>Success / Error: {{data.success}} / {{data.error}}</caption>
                 <thead>
                     <tr>
@@ -177,9 +177,9 @@
         </table>
       </div>
       <div>
-            <button type="submit" id="udhclExport" class="btn btn-primary">Export</button>
+            <button type="submit" id="krclExport" class="btn btn-primary">Export</button>
             <!--<button type="submit" id="udhclExportErrors" class="btn btn-primary">Export all errors</button>-->
-            <button type="submit" id="udhclBack" class="btn btn-primary">Back</button>
+            <button type="submit" id="krclBack" class="btn btn-primary">Back</button>
       </div>
       {{/if}}
 
@@ -346,6 +346,10 @@
         // Kiyoshi : onSubmit
         $('#krclSubmit').click(function(event){
             event.preventDefault();
+            
+            // Disable Submit button
+            $(this).prop('disabled', true);
+            $(this).text('Loading...');
 
             var connId2Name = {};
             $('#connectorsSelect option:selected').each(function(){
@@ -414,6 +418,7 @@
          * For Overview Page
          * */
         // on table row select, get log detail
+        /*
         $('#udhclTable tr').click(function(){
             var tokens = $(this).data('hidden');
             var params = {};
@@ -432,9 +437,14 @@
 
             tealiumTools.invokeFunction('{{event.onKrclRowSelect}}', params);
         });
+        */
 
         // on export button click, export table data to csv
-        $('#udhclExport').click(function(){
+        $('#krclExport').click(function(){
+            // Enable Submit button
+            $('$krclSubmit').prop('disabled', false);
+            $('$krclSubmit').text('Submit');
+
             var csvContent = 'data:text/csv;charset=utf-8,';
             var rows = [];
 
@@ -443,11 +453,11 @@
             {{/if}}
 
             // header
-            csvContent += 'Start Time, End Time, Success, Error \r\n';
+            csvContent += 'Date, Connector, Action, Success, Error \r\n';
 
             // body
             csvContent += rows.map(row => {
-                return [row.start, row.end, row.success, row.error].join(',');
+                return [row.date, row.connector, row.action, row.success, row.error].join(',');
             }).join('\r\n');
         
             var encodedUri = encodeURI(csvContent);
@@ -460,6 +470,7 @@
         });
 
         // on export all errors click, export all errors
+        /*
         $('#udhclExportErrors').click(function(){
             var limit = window.prompt('Enter maximum errors per log', 10);
             limit = isNaN(limit) ? 10 : parseInt(limit);
@@ -488,6 +499,7 @@
                     alert(error.message);
             });           
         });
+        */
 
 
         /**
@@ -519,7 +531,12 @@
         });
 
         // on back, go to search page
-        $('#udhclBack').click(function(){
+        $('#krclBack').click(function(){
+
+            // Enable Submit button
+            $('$krclSubmit').prop('disabled', false);
+            $('$krclSubmit').text('Submit');
+
             tealiumTools.invokeFunction('{{event.onKrclBack}}');
         });
 

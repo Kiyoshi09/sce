@@ -140,6 +140,7 @@ Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId
 
 Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap) {
 
+    // debug
     console.log("------ getConnectorSummaryLogs2 -------");
 
     // Run all the requests asynchronously
@@ -160,7 +161,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     // aggregate data
     var aggData = {};
     responses.forEach(function(res, index, array){
-        console.log(`${index} : ${JSON.stringify(res)}`);
+        //console.log(`${index} : ${JSON.stringify(res)}`);
         res.forEach(function(r,j,a){
             const dt   = r.start_time.substr(0,10);
             const conn = r.vendor_id;
@@ -181,6 +182,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
         })
     });
 
+    // debug
     console.log(`** aggData ** : ${JSON.stringify(aggData)}`);
 
     var data = [];
@@ -197,13 +199,14 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
         }
     }
 
-    console.log(`** data **`);
-    data.map(row => {
-        console.log(`date:${row.data}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
-    })
+    // Debug
+    //console.log(`** data **`);
+    //data.map(row => {
+    //    console.log(`date:${row.date}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
+    //})
+
+    return data;
 }
-
-
 
 Krcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId, start, end, limit }) {
     var url = this.getErrorEndpoint(connectorId, actionId, start, end, limit);
@@ -311,6 +314,7 @@ function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }
 }
 
 function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTime }) {
+    // debug
     console.log("----- krclFormSubmit ----------");
 
     if (!actionIds) {
@@ -325,7 +329,7 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
         return;
     }
 
-    /*
+    /* debug
     console.log(`actionIds : ${actionIds}`);
     console.log(`from : ${from}`);
     console.log(`to : ${to}`);
@@ -342,10 +346,6 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
     const account = gApp.inMemoryModels.account;
     const profile = gApp.inMemoryModels.profile;
     const utk = localStorage.utk;
-
-    //console.log(`account = ${account}`);
-    //console.log(`profile = ${profile}`);
-    //console.log(`utk = ${utk}`);
 
     // create requests
     const reqUrls = [];
@@ -380,7 +380,14 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
     };
     */
 
-    krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
+    const data = krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
+
+    // debug
+    console.log(`** returned data **`);
+    data.map(row => {
+        console.log(`date:${row.date}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
+    })
+
 }
 
 

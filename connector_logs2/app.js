@@ -114,17 +114,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
         res.forEach(function(r,j,a){
             let st = new Date(r.start_time);
 
-            console.log(`date st : ${st}`);
-
-            st = utcTime ? st : st.setMinutes(st.getMinutes() + (0.0 - st.getTimezoneOffset()));
-            let sst = new Date(st);
-
-            console.log(`** sst ** : ${sst}`);
-
-            const dt   = sst.toLocaleDateString().substr(0,10);
-
-            console.log(`** dt ** : ${dt}`);
-
+            const dt   = st.toLocaleDateString().substr(0,10);
             const conn = r.vendor_id;
             const act  = r.action_id;
             

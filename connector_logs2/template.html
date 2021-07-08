@@ -197,7 +197,7 @@
             const toDate    = $('#krclToDate').val();
 
             if(actionIds.length == 0){
-                alert('Please select actions');
+                tealiumTools.sendError('Error', 'No actions selected');
                 return;
             }
 
@@ -210,7 +210,7 @@
                 dateInvalid = 1;
             }
             if(dateInvalid == 1){
-                alert('From or To (or both) dates are invalid');
+                tealiumTools.sendError('Error', 'From or To (or both) dates are invalid');
                 return;
             }
 
@@ -218,7 +218,7 @@
             const e = new Date(toDate);
 
             if(e.getTime() < s.getTime()){
-                alert('To date must be after From date');
+                tealiumTools.sendError('Error', 'To date must be after From date');
                 return;
             }
 

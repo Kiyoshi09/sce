@@ -204,8 +204,8 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
             const reqUrl = new URL(endpoint);
             reqUrl.search = new URLSearchParams({
                 utk: utk,
-                start: utcTime ? (new Date(from).toISOString()) : (new Date(from)),
-                end: utcTime ? (new Date(to).toISOString()) : (new Date(to)),
+                start: (new Date(from).toISOString()),
+                end: (new Date(to).toISOString()),
                 utcTime: utcTime
             });
             reqUrls.push(reqUrl);

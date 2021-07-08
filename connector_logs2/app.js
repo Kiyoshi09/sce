@@ -117,7 +117,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
 
             console.log(`** st ** : ${st}`);
 
-            const dt   = st.substr(0,10);
+            const dt   = st.toLocaleDateString().substr(0,10);
 
             console.log(`** dt ** : ${dt}`);
 

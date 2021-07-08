@@ -190,6 +190,39 @@
 
         // on search form submit, get logs overview
         $('#krclSubmit').click(function(event){
+
+            // values from form
+            const actionIds = $('#actionsSelect').val();
+            const fromDate  = $('#krclFromDate').val();
+            const toDate    = $('#krclToDate').val();
+
+            if(actionIds.length == 0){
+                alert('Please select actions');
+                return;
+            }
+
+            let dateInvalid = 0;
+            try{
+                new Date(fromDate);
+                new Date(toDate);
+            }
+            catch(e){
+                dateInvalid = 1;
+            }
+            if(dateInvalid == 1){
+                alert('From or To (or both) dates are invalid');
+                return;
+            }
+
+            const s = new Date(fromDate);
+            const e = new Date(toDate);
+
+            if(e.getTime() < s.getTime()){
+                alert('To date must be after From date');
+                return;
+            }
+
+            // disable browser default behavior
             event.preventDefault();
             
             // Disable Submit button
@@ -216,9 +249,9 @@
             var params = {};
             params.connMap = connId2Name;
             params.actMap  = actId2Name;
-            params.actionIds = $('#actionsSelect').val(); // data format : connectorId@actionId
-            params.from = $('#krclFromDate').val() + "T00:00";
-            params.to = $('#krclToDate').val() + "T23:59";
+            params.actionIds = actionIds; 
+            params.from    = fromDate + "T00:00";
+            params.to      = toDate   + "T23:59";
 
             if (!params.actionIds){
                 alert('Fill in required fields');

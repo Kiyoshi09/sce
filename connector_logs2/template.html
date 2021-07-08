@@ -188,31 +188,6 @@
             toDate.setAttribute('max', `${todayDate}T23:59`);
         }
 
-        // set previous selection if any
-        if (window.sessionStorage){
-            var connectorIds = sessionStorage.getItem('krcl_connectors');
-            var actionIds = sessionStorage.getItem('krcl_actions');
-            var from = sessionStorage.getItem('krcl_from');
-            var to = sessionStorage.getItem('krcl_to');
-
-            if (connectorIds){
-                var c = connectorIds.split(',');
-                $('#connectorsSelect').val(c);
-                $('#connectorsSelect').trigger('click');
-            }
-            if (actionIds){
-                var a = actionIds.split(',');
-                $('#actionsSelect').val(a);
-            }
-            if (from && fromDate){
-                fromDate.value = from;
-            }
-
-            if (to && toDate){
-                toDate.value = to;
-            }
-        }
-        
         // on search form submit, get logs overview
         $('#krclSubmit').click(function(event){
             event.preventDefault();
@@ -246,15 +221,6 @@
                 return;
             }
 
-            // remember user selections
-            if (window.sessionStorage){
-                sessionStorage.setItem('krcl_connectors',$('#connectorsSelect').val().join(','));
-                sessionStorage.setItem('krcl_actions',$('#actionsSelect').val().join(','));
-                sessionStorage.setItem('krcl_from',$('#krclFromDate').val());
-                sessionStorage.setItem('krcl_to',$('#krclToDate').val());
-            }
-
-            //params.errorOnly = $('#krclErrorOnly').is(":checked");
             params.errorOnly = false; // fixed
             params.utcTime = $('#krclUtcTime').is(":checked");
             tealiumTools.invokeFunction('{{event.onKrclFormSubmit}}', params);

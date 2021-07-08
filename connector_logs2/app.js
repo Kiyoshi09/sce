@@ -1,7 +1,7 @@
 /**
- * UDH Connector Logs Viewer Ex
+ * CDH Connector Logs Viewer Ex
  * Created by kiyoshi.amano@tealium.com
- * Date: 06/07/2021
+ * Date: Jul 08, 2021
  * Version: 0.9
  * Change Log:
  */
@@ -24,7 +24,6 @@ function Krcl() {
     this.DEFAULT_ERROR_LIMIT = 10;
     this.ACCOUNT = window.gApp ? gApp.inMemoryModels.account : null;
     this.PROFILE = window.gApp ? gApp.inMemoryModels.profile : null;
-
 }
 
 Krcl.prototype.initSearchPage = function () {
@@ -41,7 +40,7 @@ Krcl.prototype.initSearchPage = function () {
 
     // prerequisite checks
     if (document.URL.indexOf('.tealiumiq.com/datacloud') === -1) {
-        this.reportError('This tool can only be run in UDH website');
+        this.reportError('This tool can only be run in CDH website');
         return;
     }
 
@@ -139,8 +138,6 @@ Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId
 }
 
 Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap) {
-    // debug
-    console.log("------ getConnectorSummaryLogs2 -------");
 
     // Run all the requests asynchronously
     const responses = 
@@ -154,13 +151,9 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
                                             })
                                         )
                                     );
-    // debug
-    console.log(`length of responses : ${responses.length}`);
-    
     // aggregate data
     var aggData = {};
     responses.forEach(function(res, index, array){
-        //console.log(`${index} : ${JSON.stringify(res)}`);
         res.forEach(function(r,j,a){
             const dt   = r.start_time.substr(0,10);
             const conn = r.vendor_id;
@@ -181,9 +174,6 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
         })
     });
 
-    // debug
-    console.log(`** aggData ** : ${JSON.stringify(aggData)}`);
-
     var data = [];
     for(let k in aggData){
         if(k.indexOf('@') >=0 && k.split('@').length >= 3){
@@ -197,12 +187,6 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
             data.push(d);
         }
     }
-
-    // Debug
-    //console.log(`** data **`);
-    //data.map(row => {
-    //    console.log(`date:${row.date}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
-    //})
 
     const today = new Date();
     const y = today.getFullYear();
@@ -287,55 +271,7 @@ Krcl.prototype.getErrorEndpoint = function (connectorId, actionId, start, end, l
 }
 
 // --- HANDLEBARS EVENT HANDLERS --- //
-function udhclFormSubmit({ connectorId, actionId, from, to, errorOnly, utcTime }) {
-    if (!connectorId || !actionId) {
-        tealiumTools.sendError('Error', 'Connector ID and Action ID is required.');
-        return;
-    }
-
-    // note date range will be set default from UI
-    // in format of string - yyyy-mm-ddThh:mm
-    if (!from || !to) {
-        tealiumTools.sendError('Error', 'Date range is required.');
-        return;
-    }
-
-    var params = {
-        connectorId: connectorId,
-        actionId: actionId,
-        start: (new Date(from).toISOString()),
-        end: (new Date(to).toISOString()),
-        utcTime: utcTime
-    };
-
-    udhcl.getConnectorSummaryLogs(params).then(data => {
-        if (errorOnly) {
-            data = data.filter(row => row.error > 0);
-        }
-
-        if (!data || data.length == 0) {
-            tealiumTools.sendError('Error', 'No connector log found for selected criteria');
-            return;
-        }
-        tealiumTools.send({
-            data: {
-                logsOverview: data,
-                logsOverviewString: JSON.stringify(data),
-                success: data.reduce((acc, cur) => { return acc + cur.success }, 0),
-                error: data.reduce((acc, cur) => { return acc + cur.error }, 0),
-                filename: ['connectorLogs', krcl.ACCOUNT, krcl.PROFILE, params.actionId].join('-') + '.csv'
-            },
-            event: krcl.events,
-            ui: {
-                overview: true
-            }
-        });
-    });
-}
-
 function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTime }) {
-    // debug
-    console.log("----- krclFormSubmit ----------");
 
     if (!actionIds) {
         tealiumTools.sendError('Error', 'Action(s) must be selected.');
@@ -348,20 +284,6 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
         tealiumTools.sendError('Error', 'Date range is required.');
         return;
     }
-
-    /* debug
-    console.log(`actionIds : ${actionIds}`);
-    console.log(`from : ${from}`);
-    console.log(`to : ${to}`);
-    console.log('/// connMap ////');
-    for(let c in connMap){
-        console.log(`${c}:${connMap[c]}`);
-    }
-    console.log('/// actMap ////');
-    for(let a in actMap){
-        console.log(`${a}:${actMap[a]}`);
-    }
-    */
 
     const account = gApp.inMemoryModels.account;
     const profile = gApp.inMemoryModels.profile;
@@ -387,51 +309,8 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
         }
     });
 
-    // debug
-    console.log(`request urls length : ${reqUrls.length}`);
-    console.log(`request urls : ${reqUrls}`);
-
-    /*
-    var params = {
-        actionIds: actionIds,
-        start: (new Date(from).toISOString()),
-        end: (new Date(to).toISOString()),
-        utcTime: utcTime
-    };
-    */
-
+    // request to get connector logs
     krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
-}
-
-
-
-
-function udhclRowSelect(params) {
-    udhcl.getConnectorErrorLogs(params).then(data => {
-        if (!data || data.errors.length == 0) {
-            tealiumTools.sendError('Error', `No data returned from API ${data.url}`);
-            return;
-        }
-        tealiumTools.send({
-            data: {
-                url: data.url,
-                errorLimitOptions: krcl.getErrorLimitOptions(),
-                errorLimit: params.limit || krcl.DEFAULT_ERROR_LIMIT,
-                errors: data.errors,
-                count: data.errors.length,
-                existingParamsString: JSON.stringify(params),
-            },
-            event: krcl.events,
-            ui: {
-                detail: true
-            }
-        });
-    });
-}
-
-function krclErrorLimitChange(params) {
-    // just like a row select but with 'limit' parameters
-    krclRowSelect(params);
 }
 
 function krclBack() {

@@ -92,7 +92,7 @@ Krcl.prototype.getConnectorsInfo = function () {
     return out;
 }
 
-Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap) {
+Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap, utcTime) {
 
     // Run all the requests asynchronously
     const responses = 
@@ -112,7 +112,15 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     var aggData = {};
     responses.forEach(function(res, index, array){
         res.forEach(function(r,j,a){
-            const dt   = r.start_time.substr(0,10);
+            let st = new Date(r.start_time);
+            st = utcTime ? st : st.setMinutes(st.getMinutes + (0.0 - st.getTimezoneOffset()));
+
+            console.log(`** st ** : ${st}`);
+
+            const dt   = st.substr(0,10);
+
+            console.log(`** dt ** : ${dt}`);
+
             const conn = r.vendor_id;
             const act  = r.action_id;
             
@@ -212,7 +220,7 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
     });
 
     // request to get connector logs
-    krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
+    krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap, utcTime);
 }
 
 function krclBack() {

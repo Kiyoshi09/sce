@@ -216,7 +216,7 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     tealiumTools.send({
         data: {
             logsOverview: data,
-            logsOverviewString: JSON.stringify(data);
+            logsOverviewString: JSON.stringify(data),
             success: data.reduce((acc, cur) => { return acc + cur.success }, 0),
             error: data.reduce((acc, cur) => { return acc + cur.error }, 0),
             filename: ['connectorLogs2', krcl.ACCOUNT, krcl.PROFILE, out_date].join('-') + '.csv'

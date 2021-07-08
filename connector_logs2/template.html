@@ -446,8 +446,8 @@
             console.log('clicked Export button .....');
 
             // Enable Submit button
-            $('$krclSubmit').prop('disabled', false);
-            $('$krclSubmit').text('Submit');
+            $('#krclSubmit').prop('disabled', false);
+            $('#krclSubmit').text('Submit');
 
             var csvContent = 'data:text/csv;charset=utf-8,';
             var rows = [];
@@ -544,8 +544,8 @@
             console.log('clicked Back button .....');
 
             // Enable Submit button
-            $('$krclSubmit').prop('disabled', false);
-            $('$krclSubmit').text('Submit');
+            $('#krclSubmit').prop('disabled', false);
+            $('#krclSubmit').text('Submit');
 
             tealiumTools.invokeFunction('{{event.onKrclBack}}');
         });

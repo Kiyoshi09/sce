@@ -21,7 +21,6 @@ function Krcl() {
         onKrclBack: 'krclBack'
     };
 
-    this.DEFAULT_ERROR_LIMIT = 10;
     this.ACCOUNT = window.gApp ? gApp.inMemoryModels.account : null;
     this.PROFILE = window.gApp ? gApp.inMemoryModels.profile : null;
 }
@@ -93,64 +92,22 @@ Krcl.prototype.getConnectorsInfo = function () {
     return out;
 }
 
-Krcl.prototype.getErrorLimitOptions = function () {
-    return [5, 10, 25, 50, 100];
-}
-
-Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId, start, end, utcTime }) {
-    var account = gApp.inMemoryModels.account;
-    var profile = gApp.inMemoryModels.profile;
-    var utk = localStorage.utk;
-
-    const endpoint = `https://${location.hostname}/urest/datacloud/${account}/${profile}/audit/${connectorId}/${actionId}`;
-
-    var url = new URL(endpoint);
-    url.search = new URLSearchParams({
-        utk: utk,
-        start: start,
-        end: end
-    });
-
-    var data = [];
-    try {
-        var response = await fetch(url);
-        if (!response.ok) throw new Error('Invalid request');
-        data = await response.json();
-    } catch (err) {
-        // do nothing
-    }
-
-    // touch up data
-    data = data.map(row => {
-        var startDate = new Date(row.start_time);
-        var endDate = new Date(row.end_time);
-        return {
-            start: utcTime ? startDate.toISOString() : startDate.toLocaleDateString() + ' ' + startDate.getHours() + ':00',
-            end: utcTime ? endDate.toISOString() : endDate.toLocaleDateString() + ' ' + endDate.getHours() + ':00',
-            success: row.success_count,
-            error: row.error_count,
-            hidden: `${connectorId}|${actionId}|${row.start_time}|${row.end_time}|${row.error_count}`,
-            endpoint: this.getErrorEndpoint(connectorId, actionId, row.start_time, row.end_time)
-        }
-    });
-
-    return data;
-}
-
 Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap) {
 
     // Run all the requests asynchronously
     const responses = 
-            await Promise.all(requests.map(request => fetch(request)
-                                            .then(response => {
-                                                if(response.ok){
-                                                    return response.json();
-                                                }else{
-                                                    return {"error": response.status}
-                                                }
-                                            })
-                                        )
-                                    );
+            await Promise.all(
+                requests.map(request => fetch(request)
+                            .then(response => {
+                                if(response.ok){
+                                    return response.json();
+                                }else{
+                                    return {"error": response.status}
+                                }
+                            })
+                        )
+                    );
+
     // aggregate data
     var aggData = {};
     responses.forEach(function(res, index, array){
@@ -210,64 +167,6 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
             overview: true
         }
     });
-}
-
-Krcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId, start, end, limit }) {
-    var url = this.getErrorEndpoint(connectorId, actionId, start, end, limit);
-    var data = [];
-    try {
-        var response = await fetch(url);
-        if (!response.ok) throw new Error('Invalid request');
-        data = await response.json();
-    } catch (err) {
-        // do nothing
-    }
-
-    // touch up data
-    data = data.map(row => {
-        row.time = (new Date(row.time)).toLocaleString();
-        row.message = row.message.split(';');
-        // do we have Action Time in last row?
-        var lastMsg = row.message[row.message.length - 1];
-        if (lastMsg.includes('Action Time:')) {
-            row.actionTime = lastMsg.split(':')[1].trim();
-        }
-        return row;
-    });
-
-    return {
-        url: url.toString(),
-        errors: data
-    };
-}
-
-Krcl.prototype.reportError = function (msg) {
-    tealiumTools.send({
-        data: {
-            error: msg,
-        },
-        ui: {
-            error: true
-        }
-    });
-}
-
-Krcl.prototype.getErrorEndpoint = function (connectorId, actionId, start, end, limit) {
-    var account = gApp.inMemoryModels.account;
-    var profile = gApp.inMemoryModels.profile;
-    var utk = localStorage.utk;
-
-    const endpoint = `https://${location.hostname}/urest/datacloud/${account}/${profile}/audit/${connectorId}/${actionId}/errors`;
-
-    var url = new URL(endpoint);
-    url.search = new URLSearchParams({
-        utk: utk,
-        start: start,
-        end: end,
-        limit: limit || this.DEFAULT_ERROR_LIMIT
-    });
-
-    return url.toString();
 }
 
 // --- HANDLEBARS EVENT HANDLERS --- //

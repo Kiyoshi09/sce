@@ -60,7 +60,6 @@
     <form>
         <div class="form-group">
 
-        <!-- Kiyoshi -->
         <div class="row">
             <label for="connectorsInput">All Connectors2</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
@@ -81,60 +80,18 @@
         </div>
 
         </div>
-        <!-- Kiyoshi -->
 
-          <!-- original 
-          <label for="connectorsInput">Connector</label>
-          <input required list="connectorsDd" class="form-control" id="connectorsInput" placeholder="enter name/id/status...">
-          <datalist id="connectorsDd">
-            {{#each data.connectorsInfo}}
-            <option value="{{@key}}">{{this.title}}</option>
-            {{/each}}
-          </datalist>
-        </div>
-
-        <div class="form-group">
-            <label for="actionsDd">Action</label>
-            <select class="form-control" id="actionsDd">
-                <option hidden disabled selected value> -- select an option -- </option>
-            </select>
-        </div>
-         -->
-
-        <!-- Kiyoshi -->
         <div class="form-group">
                 <label for="fromDate">From</label>
                 <input class="form-control" type="date" id="krclFromDate" required>
         </div>
-
         <div class="form-group">
                 <label for="toDate">To</label>
                 <input class="form-control" type="date" id="krclToDate" required>
         </div>
-        <!-- Kiyoshi -->
-
-        <!-- original
-        <div class="form-group">
-                <label for="fromDate">From</label>
-                <input class="form-control" type="datetime-local" id="fromDate" required>
-        </div>
-
-        <div class="form-group">
-                <label for="toDate">To</label>
-                <input class="form-control" type="datetime-local" id="toDate" required>
-        </div>
-        -->
 
         <div class="form-group">
                 <label>Options</label>
-                <!--
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <input type="checkbox" id="krclErrorOnly">
-                    </span>
-                    <label class="form-control" for="errorOnly">Show logs with error only</label>
-                </div>
-                -->
                 <div class="input-group">
                     <span class="input-group-addon">
                         <input type="checkbox" id="krclUtcTime">
@@ -164,7 +121,6 @@
                 </thead>
                 <tbody>
                     {{#each data.logsOverview}}
-                    <!--<tr data-hidden="{{this.hidden}}">-->
                     <tr>
                     <td>{{this.date}}</td>
                     <td>{{this.connector}}</td>
@@ -178,54 +134,9 @@
       </div>
       <div>
             <button type="submit" id="krclExport" class="btn btn-primary">Export</button>
-            <!--<button type="submit" id="udhclExportErrors" class="btn btn-primary">Export all errors</button>-->
             <button type="submit" id="krclBack" class="btn btn-primary">Back</button>
       </div>
       {{/if}}
-
-      <!-- Off detail
-      {{#if ui.detail}}
-      <div class="errorDetailHeader">
-            <span>Displaying {{data.count}} of up to</span>
-            <select id="udhclErrorLimit">
-                {{#each data.errorLimitOptions}}
-                <option value={{this}}>{{this}}</option>
-                {{/each}}
-            </select>
-            <span>errors</span>
-      </div>
-      <div class="list-group">
-          {{#each data.errors}}
-          <a class="list-group-item">
-              <div class="list-group-item-heading">
-                  <span class="badge badge-error">{{this.time}}</span>
-                  <span class="badge badge-error">{{this.error_code}}</span>
-                  {{#if this.actionTime}}
-                  <span class="badge badge-error">{{this.actionTime}}</span>
-                  {{/if}}
-              </div>
-              <div class="list-group-item-text">
-                  <span class="badge badge-error">{{this.visitor_id}}</span>
-              </div>
-              <div class="list-group-item-text">
-                    <strong>{{this.title}}</strong>
-              </div>
-              <div class="well well-sm list-group-item-text pre-scrollable">
-                  <ul>
-                  {{#each this.message}}
-                    <li class="text-error">{{this}}</li>
-                  {{/each}}
-                  <ul>
-                  </div>
-          </a>
-          {{/each}}
-      </div>
-      <div>
-        <button type="submit" id="udhclDetail" class="btn btn-primary">Detail</button>
-        <button type="submit" id="udhclBack" class="btn btn-primary">Back</button>
-      </div>
-      {{/if}}
-      -->
 
       </header>
 
@@ -277,20 +188,6 @@
             toDate.setAttribute('max', `${todayDate}T23:59`);
         }
 
-        // on connector selected, update actions dropdown
-        /*
-        $('#connectorsInput').on('input', function(event){
-            var connectorId = event.target.value;
-            $('#actionsDd').empty();
-            $.each(connectorsInfo[connectorId].actions, function (i, item) {
-                $('#actionsDd').append($('<option>', { 
-                    value: item.id,
-                    text : item.title 
-                }));
-            });
-        });
-        */
-
         // set previous selection if any
         if (window.sessionStorage){
             var connectorIds = sessionStorage.getItem('krcl_connectors');
@@ -317,39 +214,12 @@
         }
         
         // on search form submit, get logs overview
-        /* Original
-        $('#udhclSubmit').click(function(event){
-            event.preventDefault();
-            var params = {};
-            params.connectorId = $('#connectorsInput').val();
-            params.actionId = $('#actionsDd').val();
-            params.from = $('#fromDate').val();
-            params.to = $('#toDate').val();
-
-            if (!params.connectorId || !params.actionId){
-                alert('Fill in required fields');
-                return;
-            }
-
-            // remember user selections
-            if (window.sessionStorage){
-                sessionStorage.setItem('connectorId', params.connectorId);
-                sessionStorage.setItem('actionId', params.actionId);
-                sessionStorage.setItem('from', params.from);
-                sessionStorage.setItem('to', params.to);
-            }
-            params.errorOnly = $('#errorOnly').is(":checked");
-            params.utcTime = $('#utcTime').is(":checked");
-            tealiumTools.invokeFunction('{{event.onFormSubmit}}', params);
-        });
-        */
-        // Kiyoshi : onSubmit
         $('#krclSubmit').click(function(event){
             event.preventDefault();
             
             // Disable Submit button
             $(this).prop('disabled', true);
-            $(this).text('Loading...');
+            $(this).text('Requesting...');
 
             var connId2Name = {};
             $('#connectorsSelect option:selected').each(function(){
@@ -395,7 +265,6 @@
         var selectedConnectors2Actions = [];
         $('#connectorsSelect').click(function(event){
             var selectedConnectors = $(this).val();
-            console.log("selected connector : " + selectedConnectors);
             
             // update actions select area
             $('#actionsSelect').empty();
@@ -417,33 +286,8 @@
         /**
          * For Overview Page
          * */
-        // on table row select, get log detail
-        /*
-        $('#udhclTable tr').click(function(){
-            var tokens = $(this).data('hidden');
-            var params = {};
-
-            tokens = tokens.split('|');
-            params.connectorId = tokens[0];
-            params.actionId = tokens[1];
-            params.start = tokens[2];
-            params.end = tokens[3];
-            params.error_count = tokens[4];
-
-            // do nothing with 0 error
-            if(params.error_count == 0){
-                return;
-            }
-
-            tealiumTools.invokeFunction('{{event.onKrclRowSelect}}', params);
-        });
-        */
-
         // on export button click, export table data to csv
         $('#krclExport').click(function(){
-
-            // debug
-            console.log('clicked Export button .....');
 
             // Enable Submit button
             $('#krclSubmit').prop('disabled', false);
@@ -464,9 +308,6 @@
                 return [row.date, row.connector, row.action, row.success, row.error].join(',');
             }).join('\r\n');
 
-            // debug
-            console.log(`csvContent : ${csvContent}`);
-        
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -476,73 +317,8 @@
             document.body.removeChild(link); 
         });
 
-        // on export all errors click, export all errors
-        /*
-        $('#udhclExportErrors').click(function(){
-            var limit = window.prompt('Enter maximum errors per log', 10);
-            limit = isNaN(limit) ? 10 : parseInt(limit);
-            limit = limit > 50 ? 50 : limit; // hard code upper limit
-
-            var rows = [];
-            {{#if data.logsOverviewString}}
-            rows = JSON.parse('{{{ data.logsOverviewString }}}');
-            {{/if}}
-            
-            var urls = rows.filter(row => row.error > 0).map(row => row.endpoint.replace(/limit=\d+/gi, `limit=${limit}`));
-
-            Promise.all(urls
-                .map(async url => {
-                    var data = [];
-                    var response = await fetch(url);
-                    if (response.ok) data = await response.json();
-                    return data;
-                })).then(values => {
-                    var exportObj = [].concat.apply([], values);
-                    downloadObjectAsJson(exportObj, 'connectorErrorLogs');
-                    alert('Errors logs are downloaded!');
-
-                })
-                .catch(error => {
-                    alert(error.message);
-            });           
-        });
-        */
-
-
-        /**
-         * For Error Page
-         * */
-        // set default error limit display
-        var errorLimit = 10;
-        {{#if data.errorLimit}}
-            errorLimit = parseInt({{data.errorLimit}});
-        {{/if}}
-        $('#udhclErrorLimit').val(errorLimit);
-
-        // on dropdown maxium error select, reload page with new error display limit
-        $('#udhclErrorLimit').on('change', function(event){
-            var errorLimit = event.target.selectedOptions[0].value;
-            var params = {};
-            
-            {{#if data.existingParamsString}}
-                params = JSON.parse('{{{ data.existingParamsString }}}');
-            {{/if}}
-
-            params.limit = errorLimit;
-            tealiumTools.invokeFunction('{{event.onKrclErrorLimitChange}}', params);
-        });
-
-        // on error list item click, open new tab of error data
-        $('#udhclDetail').click(function(){
-            window.open('{{data.url}}', '_blank');
-        });
-
         // on back, go to search page
         $('#krclBack').click(function(){
-
-            // debug
-            console.log('clicked Back button .....');
-
             // Enable Submit button
             $('#krclSubmit').prop('disabled', false);
             $('#krclSubmit').text('Submit');

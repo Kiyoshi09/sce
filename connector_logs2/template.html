@@ -61,7 +61,6 @@
         <div class="form-group">
 
         <!-- Kiyoshi -->
-        <p style="color:red">version 0.1.3</p>
         <div class="row">
             <label for="connectorsInput">All Connectors</label>
             <select id="connectorsSelect" class="form-select my-selector" multiple size="7">
@@ -83,7 +82,6 @@
 
         </div>
         <!-- Kiyoshi -->
-
 
           <!-- original 
           <label for="connectorsInput">Connector</label>
@@ -157,17 +155,20 @@
                 <caption>Success / Error: {{data.success}} / {{data.error}}</caption>
                 <thead>
                     <tr>
-                        <th>Start</th>
-                        <th>End</th>
+                        <th>Date</th>
+                        <th>Connector</th>
+                        <th>Action</th>
                         <th>Success</th>
                         <th>Error</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each data.logsOverview}}
-                    <tr data-hidden="{{this.hidden}}">
-                    <td>{{this.start}}</td>
-                    <td>{{this.end}}</td>
+                    <!--<tr data-hidden="{{this.hidden}}">-->
+                    <tr>
+                    <td>{{this.date}}</td>
+                    <td>{{this.connector}}</td>
+                    <td>{{this.action}}</td>
                     <td>{{this.success}}</td>
                     <td>{{this.error}}</td>
                     </tr>
@@ -177,11 +178,12 @@
       </div>
       <div>
             <button type="submit" id="udhclExport" class="btn btn-primary">Export</button>
-            <button type="submit" id="udhclExportErrors" class="btn btn-primary">Export all errors</button>
+            <!--<button type="submit" id="udhclExportErrors" class="btn btn-primary">Export all errors</button>-->
             <button type="submit" id="udhclBack" class="btn btn-primary">Back</button>
       </div>
       {{/if}}
 
+      <!-- Off detail
       {{#if ui.detail}}
       <div class="errorDetailHeader">
             <span>Displaying {{data.count}} of up to</span>
@@ -223,6 +225,7 @@
         <button type="submit" id="udhclBack" class="btn btn-primary">Back</button>
       </div>
       {{/if}}
+      -->
 
       </header>
 

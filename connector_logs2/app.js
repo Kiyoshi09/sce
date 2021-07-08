@@ -139,7 +139,6 @@ Krcl.prototype.getConnectorSummaryLogs = async function ({ connectorId, actionId
 }
 
 Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actMap) {
-
     // debug
     console.log("------ getConnectorSummaryLogs2 -------");
 
@@ -205,7 +204,27 @@ Krcl.prototype.getConnectorSummaryLogs2 = async function(requests, connMap, actM
     //    console.log(`date:${row.date}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
     //})
 
-    return data;
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = ('0' + (today.getMonth() + 1)).slice(-2);
+    const d = ('0' + today.getDate()).slice(-2);
+    const h = ('0' + today.getHours()).slice(-2);
+    const mi = ('0' + today.getMinutes()).slice(-2);
+    const s = ('0' + today.getSeconds()).slice(-2);
+    const out_date = y + '' + m + '' + d + '' + h + '' + mi + '' + s;
+
+    tealiumTools.send({
+        data: {
+            logsOverview: data,
+            success: data.reduce((acc, cur) => { return acc + cur.success }, 0),
+            error: data.reduce((acc, cur) => { return acc + cur.error }, 0),
+            filename: ['connectorLogs2', krcl.ACCOUNT, krcl.PROFILE, out_date].join('-') + '.csv'
+        },
+        event: krcl.events,
+        ui: {
+            overview: true
+        }
+    });
 }
 
 Krcl.prototype.getConnectorErrorLogs = async function ({ connectorId, actionId, start, end, limit }) {
@@ -380,14 +399,7 @@ function krclFormSubmit({ connMap, actMap, actionIds, from, to, errorOnly, utcTi
     };
     */
 
-    const data = krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
-
-    // debug
-    console.log(`** returned data **`);
-    data.map(row => {
-        console.log(`date:${row.date}, connector:${row.connector}, action:${row.action}, success:${row.success}, error:${row.error}`);
-    })
-
+    krcl.getConnectorSummaryLogs2(reqUrls, connMap, actMap);
 }
 
 

@@ -289,36 +289,40 @@
         // cmd/cntrl+a keydown event in selecting connectors area
         jQuery('body').on('keydown', event => {
             if(event.key === 'a' && (event.ctrlKey || event.metaKey)){
-                // update actions select area
-                $('#actionsSelect').empty(); 
-                
-                const connsVals = [];
-                const conns = document.querySelectorAll('#connectorsSelect option');
 
-                conns.forEach((conn) => {
-                    if(conn.innerText.indexOf('-- Connectors --') == -1){
-                        connsVals.push(conn.value);
-                    }
-                });
+                let focused = document.activeElement;
+                if(focused.id == 'connectorsSelect'){
+                    // update actions select area
+                    $('#actionsSelect').empty(); 
+                    
+                    const connsVals = [];
+                    const conns = document.querySelectorAll('#connectorsSelect option');
 
-                console.log(`connsVals length : ${connsVals.length}`);
-                
-                connsVals.forEach(function(connectorId, index, array){
-
-                    console.log(`${index} : connectorId : ${connectorId}`);
-
-                    $.each(connectorsInfo[connectorId].actions, function (i, item) {
-                        const val = connectorId + "@" + item.id;
-
-                        console.log(`actionId : ${val}`);
-
-                        $('#actionsSelect').append($('<option>', { 
-                            value: val,
-                            text : item.title,
-                            selected: true
-                        }));
+                    conns.forEach((conn) => {
+                        if(conn.innerText.indexOf('-- Connectors --') == -1){
+                            connsVals.push(conn.value);
+                        }
                     });
-                })
+
+                    console.log(`connsVals length : ${connsVals.length}`);
+                    
+                    connsVals.forEach(function(connectorId, index, array){
+
+                        console.log(`${index} : connectorId : ${connectorId}`);
+
+                        $.each(connectorsInfo[connectorId].actions, function (i, item) {
+                            const val = connectorId + "@" + item.id;
+
+                            console.log(`actionId : ${val}`);
+
+                            $('#actionsSelect').append($('<option>', { 
+                                value: val,
+                                text : item.title,
+                                selected: true
+                            }));
+                        });
+                    })
+                }
             }
         });
 
